@@ -146,5 +146,5 @@ export const calendarEvent = {
 
 export const closingConfig = {
     ment: "부모님, 조심히 오세요.\n직접 인사드릴 수 있어 감사한 마음입니다.",
-    copyright: "© 2025 Engagement"
+    copyright: "© 2025 jangpago_"
 };
