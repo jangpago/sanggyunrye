@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { introConfig } from '../constants';
 
 const Hero = () => {
+    const { scrollY } = useScroll();
+    const bgY = useTransform(scrollY, [0, 600], [0, 40]); // subtle parallax on scroll
+
     const getDDayLabel = () => {
         const target = new Date(introConfig.dDayDate).getTime();
         const now = new Date().getTime();
@@ -39,14 +42,14 @@ const Hero = () => {
     return (
         <section className="w-full h-screen relative flex flex-col justify-center items-center text-center overflow-hidden">
             {/* Background Image with Dim */}
-            <div className="absolute inset-0 z-0">
+            <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
                 <img
                     src="/intro_bg.jpg"
                     alt="Background"
                     className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black/30 md:bg-black/20" />
-            </div>
+            </motion.div>
 
             <div className="z-10 text-white p-6">
                 <motion.div

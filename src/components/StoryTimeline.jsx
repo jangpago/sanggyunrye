@@ -3,6 +3,16 @@ import { motion } from 'framer-motion';
 import { storyData } from '../constants';
 
 const StoryTimeline = () => {
+    const imageVariants = {
+        initial: { opacity: 0, y: 24, filter: 'blur(8px)', scale: 0.98 },
+        enter: { opacity: 1, y: 0, filter: 'blur(0px)', scale: 1 }
+    };
+
+    const textVariants = {
+        initial: (dir) => ({ opacity: 0, x: dir === 'left' ? 20 : -20, scale: 0.98 }),
+        enter: { opacity: 1, x: 0, scale: 1 }
+    };
+
     return (
         <section className="w-full py-20 px-6 bg-white relative overflow-hidden">
             <div className="flex flex-col items-center mb-16">
@@ -61,23 +71,27 @@ const StoryTimeline = () => {
 
                             {/* Image Side */}
                             <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.3, duration: 0.6 }}
-                                className="w-[45%]"
+                                variants={imageVariants}
+                                initial="initial"
+                                whileInView="enter"
+                                viewport={{ once: true, amount: 0.4 }}
+                                transition={{ delay: 0.1, duration: 0.8, ease: 'easeOut' }}
+                                whileHover={{ scale: 1.02, rotate: index % 2 === 0 ? -0.5 : 0.5, boxShadow: '0 14px 30px rgba(0,0,0,0.12)' }}
+                                className="w-[45%] will-change-transform"
                             >
-                                <div className="rounded-2xl overflow-hidden shadow-float aspect-[3/4] hover:scale-[1.02] transition-transform duration-500">
+                                <div className="rounded-2xl overflow-hidden shadow-float aspect-[3/4] transition-transform duration-500">
                                     <img src={story.image} alt={story.title} className="w-full h-full object-cover" />
                                 </div>
                             </motion.div>
 
                             {/* Text Side */}
                             <motion.div
-                                initial={{ opacity: 0, x: index % 2 === 0 ? 20 : -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.4, duration: 0.6 }}
+                                custom={index % 2 === 0 ? 'left' : 'right'}
+                                variants={textVariants}
+                                initial="initial"
+                                whileInView="enter"
+                                viewport={{ once: true, amount: 0.3 }}
+                                transition={{ delay: 0.15, duration: 0.7, ease: 'easeOut' }}
                                 className={`w-[45%] flex flex-col justify-center ${index % 2 === 0 ? 'text-left pl-4' : 'text-right pr-4'}`}
                             >
                                 <span className="text-accent text-[10px] tracking-widest block mb-2 font-medium uppercase font-serif">
