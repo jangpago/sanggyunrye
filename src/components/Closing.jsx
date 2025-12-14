@@ -4,8 +4,47 @@ import { Cloud, Calendar, Umbrella } from 'lucide-react';
 import { weatherInfo, closingConfig, calendarEvent } from '../constants';
 
 const Closing = () => {
-    // Helper to generate Google Calendar Link
-    const googleCalendarLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(calendarEvent.title)}&details=${encodeURIComponent(calendarEvent.description)}&location=${encodeURIComponent(calendarEvent.location)}&dates=${calendarEvent.startTime}/${calendarEvent.endTime}`;
+    // Function to generate ICS file content
+    const generateICS = () => {
+        const icsContent = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//Engagement Invitation//Calendar//KO',
+            'CALSCALE:GREGORIAN',
+            'METHOD:PUBLISH',
+            'BEGIN:VEVENT',
+            `DTSTART:${calendarEvent.startTime}`,
+            `DTEND:${calendarEvent.endTime}`,
+            `SUMMARY:${calendarEvent.title}`,
+            `DESCRIPTION:${calendarEvent.description}`,
+            `LOCATION:${calendarEvent.location}`,
+            'STATUS:CONFIRMED',
+            'SEQUENCE:0',
+            'BEGIN:VALARM',
+            'TRIGGER:-PT1H',
+            'ACTION:DISPLAY',
+            'DESCRIPTION:1시간 전 알림',
+            'END:VALARM',
+            'END:VEVENT',
+            'END:VCALENDAR'
+        ].join('\r\n');
+
+        return icsContent;
+    };
+
+    // Function to download ICS file
+    const downloadICS = () => {
+        const icsContent = generateICS();
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = '상견례_일정.ics';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    };
 
     return (
         <footer className="w-full py-20 px-6 bg-white flex flex-col items-center text-center relative overflow-hidden">
@@ -68,15 +107,13 @@ const Closing = () => {
                 </p>
 
                 {/* Calendar Button */}
-                <a
-                    href={googleCalendarLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center justify-center px-8 py-4 bg-[#f2f2f2] text-[#444] rounded-full text-sm font-medium hover:bg-[#e0e0e0] transition mb-16 w-full max-w-[280px]"
+                <button
+                    onClick={downloadICS}
+                    className="flex items-center justify-center px-8 py-4 bg-[#f2f2f2] text-[#444] rounded-full text-sm font-medium hover:bg-[#e0e0e0] transition mb-16 w-full max-w-[280px] cursor-pointer"
                 >
                     <Calendar size={16} className="mr-2 opacity-70" />
                     캘린더에 일정 저장
-                </a>
+                </button>
 
                 {/* Copyright */}
                 <span className="text-[10px] text-[#ccc] tracking-widest uppercase">
