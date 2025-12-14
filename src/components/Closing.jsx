@@ -4,6 +4,9 @@ import { Cloud, Calendar, Umbrella } from 'lucide-react';
 import { weatherInfo, closingConfig, calendarEvent } from '../constants';
 
 const Closing = () => {
+    // Helper to generate Google Calendar Link
+    const googleCalendarLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(calendarEvent.title)}&details=${encodeURIComponent(calendarEvent.description)}&location=${encodeURIComponent(calendarEvent.location)}&dates=${calendarEvent.startTime}/${calendarEvent.endTime}`;
+
     // Function to generate ICS file content
     const generateICS = () => {
         const icsContent = [
@@ -106,14 +109,30 @@ const Closing = () => {
                     {closingConfig.ment}
                 </p>
 
-                {/* Calendar Button */}
-                <button
-                    onClick={downloadICS}
-                    className="flex items-center justify-center px-8 py-4 bg-[#f2f2f2] text-[#444] rounded-full text-sm font-medium hover:bg-[#e0e0e0] transition mb-16 w-full max-w-[280px] cursor-pointer"
-                >
-                    <Calendar size={16} className="mr-2 opacity-70" />
-                    캘린더에 일정 저장
-                </button>
+                {/* Calendar Buttons */}
+                <div className="flex flex-col gap-3 mb-4 w-full">
+                    <a
+                        href={googleCalendarLink}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center justify-center px-8 py-4 bg-[#f2f2f2] text-[#444] rounded-full text-sm font-medium hover:bg-[#e0e0e0] transition w-full max-w-[280px]"
+                    >
+                        <Calendar size={16} className="mr-2 opacity-70" />
+                        Google 캘린더로 추가
+                    </a>
+                    <button
+                        onClick={downloadICS}
+                        className="flex items-center justify-center px-8 py-4 border border-[#e5e5e5] bg-white text-[#444] rounded-full text-sm font-medium hover:bg-[#f7f7f7] transition w-full max-w-[280px] cursor-pointer"
+                    >
+                        <Calendar size={16} className="mr-2 opacity-70" />
+                        iOS/Outlook용 .ics 저장
+                    </button>
+                </div>
+
+                <p className="text-[11px] text-[#999] leading-5 mb-12 px-4">
+                    카카오톡 등 인앱 브라우저에서는 다운로드 후 자동 실행이 안 될 수 있습니다.
+                    새창에서 열기(사파리/크롬) 후 .ics 파일을 열어 캘린더에 추가해주세요.
+                </p>
 
                 {/* Copyright */}
                 <span className="text-[10px] text-[#ccc] tracking-widest uppercase">
