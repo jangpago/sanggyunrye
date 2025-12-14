@@ -3,20 +3,23 @@ import { motion } from 'framer-motion';
 import { introConfig } from '../constants';
 
 const Hero = () => {
-    const [timeLeft, setTimeLeft] = useState('');
+    const getDDayLabel = () => {
+        const target = new Date(introConfig.dDayDate).getTime();
+        const now = new Date().getTime();
+        const difference = target - now;
+        const days = Math.ceil(difference / (1000 * 60 * 60 * 24));
+
+        if (days > 0) return `D-${days}`;
+        if (days === 0) return 'D-Day';
+        return `D+${Math.abs(days)}`;
+    };
+
+    const [timeLeft, setTimeLeft] = useState(() => getDDayLabel());
 
     useEffect(() => {
-        const calculateDDay = () => {
-            const target = new Date(introConfig.dDayDate).getTime();
-            const now = new Date().getTime();
-            const difference = target - now;
-            const days = Math.ceil(difference / (1000 * 60 * 60 * 24));
-
-            if (days > 0) return `D-${days}`;
-            if (days === 0) return 'D-Day';
-            return `D+${Math.abs(days)}`;
-        };
-        setTimeLeft(calculateDDay());
+        const update = () => setTimeLeft(getDDayLabel());
+        const interval = setInterval(update, 60 * 1000); // update every minute
+        return () => clearInterval(interval);
     }, []);
 
     // Typing effect hook logic implemented directly
